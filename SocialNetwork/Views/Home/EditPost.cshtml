@@ -1,0 +1,29 @@
+﻿@model SocialNetwork.Core.Application.ViewModels.Post.SavePostViewModel
+
+@{
+    ViewData["Title"] = "Edit post";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center">Edit post</h2>
+
+    <div class="row my-3">
+        <div class="col-md-12">
+            <form asp-action="EditPost" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="ImageUrl" class="form-control" />
+                <input type="hidden" asp-for="YoutubeUrl" class="form-control" />
+                <input type="hidden" asp-for="CreatedAt" class="form-control" />
+                <input type="hidden" asp-for="UserId" class="form-control" />
+                <input type="hidden" asp-for="UserName" class="form-control" />
+                <input type="hidden" asp-for="ProfilePictureUrl" class="form-control" />
+
+                <div class="form-group">
+                    <textarea class="form-control" asp-for="Content" placeholder="Escribe algo..." rows="3" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-2">Publicar</button>
+            </form>
+        </div>
+    </div>
+</div>

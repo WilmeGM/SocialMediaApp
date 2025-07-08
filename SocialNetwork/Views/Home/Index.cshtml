@@ -1,0 +1,118 @@
+﻿@using SocialNetwork.Core.Application.Helpers
+@model List<SocialNetwork.Core.Application.ViewModels.Post.PostViewModel>
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center">Publicaciones Recientes</h2>
+
+    <!-- Crear nueva publicación -->
+    <div class="row my-3">
+        <div class="col-md-12">
+            <form asp-action="CreatePost" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <textarea class="form-control" name="Content" placeholder="Escribe algo..." rows="3" required></textarea>
+                </div>
+
+                <div class="form-group mt-2">
+                    <input type="file" name="Image" class="form-control" />
+                    <small class="form-text text-muted">Puedes subir una imagen.</small>
+                </div>
+
+                <div class="form-group mt-2">
+                    <input type="url" name="YoutubeUrl" class="form-control" placeholder="Enlace de video de YouTube (opcional)" />
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-2">Publicar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Listado de publicaciones -->
+    <div class="row">
+        @foreach (var post in Model)
+        {
+            <div class="col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3 gap-2">
+                            <img src="@post.ProfilePictureUrl" class="rounded-circle" alt="Foto de perfil" width="50" height="50" />
+                            <h5 class="card-title ml-3">@post.UserName</h5>
+                        </div>
+
+                        <p class="card-text">@post.Content</p>
+
+                        <!-- Mostrar imagen si existe -->
+                        @if (!string.IsNullOrEmpty(post.ImageUrl))
+                        {
+                            <img src="@post.ImageUrl" class="img-fluid my-2" alt="Imagen de la publicación" />
+                        }
+
+                        <!-- Mostrar video de YouTube si existe -->
+                        @if (!string.IsNullOrEmpty(post.YoutubeUrl))
+                        {
+                            <div class="embed-responsive embed-responsive-16by9 my-2">
+                                <iframe class="embed-responsive-item" src="@YoutubeHelper.GetYouTubeEmbedUrl(post.YoutubeUrl)" allowfullscreen></iframe>
+                            </div>
+                        }
+
+                        <p class="text-muted">Publicado el: @post.CreatedAt.ToString("dd/MM/yyyy HH:mm")</p>
+
+                        <a asp-controller="Home" asp-action="EditPost" asp-route-postId="@post.Id" class="btn btn-sm btn-secondary">Editar</a>
+                        <form asp-action="DeletePost" method="post" class="d-inline">
+                             <input type="hidden" name="postId" value="@post.Id" />
+                             <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                        </form>
+
+                        <!-- Listado de comentarios -->
+                        <h6 class="mt-3">Comentarios</h6>
+                        @foreach (var comment in post.Comments)
+                        {
+                            <div class="mb-2">
+                                <div class="d-flex align-items-center">
+                                    <!-- Miniatura de la imagen de perfil del comentario -->
+                                    <img src="@comment.ProfilePictureUrl" alt="Imagen de perfil" class="rounded-circle" width="30" height="30">
+                                    <div class="ms-2">
+                                        <strong>@comment.UserName:</strong> @comment.Content
+                                        <small class="text-muted">Publicado el @comment.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                                    </div>
+                                </div>
+
+                                <!-- Listado de replies -->
+                                <ul class="list-unstyled">
+                                    @foreach (var reply in comment.Replies)
+                                    {
+                                        <li class="d-flex align-items-center mb-1">
+                                            <!-- Miniatura de la imagen de perfil del reply -->
+                                            <img src="@reply.ProfilePictureUrl" alt="Imagen de perfil" class="rounded-circle" width="25" height="25">
+                                            <div class="ms-2">
+                                                <strong>@reply.UserName:</strong> @reply.Content
+                                                <small class="text-muted">Publicado el @reply.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+
+                                <!-- Formulario para agregar reply -->
+                                <form asp-action="CreateReply" method="post" class="mt-2">
+                                    <input type="hidden" name="CommentId" value="@comment.Id" />
+                                    <textarea class="form-control" name="Content" rows="1" placeholder="Responder..." required></textarea>
+                                    <button type="submit" class="btn btn-sm btn-outline-primary mt-1">Responder</button>
+                                </form>
+                            </div>
+                        }
+
+                        <!-- Formulario para agregar comentario -->
+                        <form asp-action="CreateComment" method="post" class="mt-3">
+                            <input type="hidden" name="PostId" value="@post.Id" />
+                            <textarea class="form-control" name="Content" rows="2" placeholder="Comentar..." required></textarea>
+                            <button type="submit" class="btn btn-sm btn-primary mt-2">Comentar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,77 @@
+﻿@using SocialNetwork.Core.Application.ViewModels.User;
+@model SaveUserViewModel
+@{
+    ViewData["Title"] = "Sign in";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card">
+                <div class="card-header bg-dark text-light">
+                    <h4>Sign in!</h4>
+                </div>
+                <div class="card-body">
+
+                    @if (Model.HasError)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <p>@Model.Error</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+                    <form enctype="multipart/form-data" method="post" asp-controller="User" asp-action="Register">
+                        <div class="mb-3">
+                            <label asp-for="ProfilePicture" class="form-label">Photo: </label>
+                            <input asp-for="ProfilePicture" class="form-control" required/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FirstName" class="form-label">Name: </label>
+                            <input asp-for="FirstName" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LastName" class="form-label">Last name: </label>
+                            <input asp-for="LastName" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="UserName" class="form-label">Username: </label>
+                            <input asp-for="UserName" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">Password: </label>
+                            <input asp-for="Password" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ConfirmPassword" class="form-label">Confirm password: </label>
+                            <input asp-for="ConfirmPassword" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Phone" class="form-label">Phone number: </label>
+                            <input asp-for="Phone" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email: </label>
+                            <input asp-for="Email" class="form-control" />
+                        </div>
+
+                        <div class="d-flex flex-row justify-content-end gap-2">
+                            <a asp-controller="User" asp-action="Index" class="btn btn-secondary">Volver</a>
+                            <button type="submit" class="btn btn-primary justify-content-end">Sign in</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
